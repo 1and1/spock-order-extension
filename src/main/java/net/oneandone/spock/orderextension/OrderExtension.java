@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class OrderExtension extends AbstractAnnotationDrivenExtension<Order> {
 
+    @Override
     public void visitSpecAnnotation(Order annotation, final SpecInfo spec) {
         sortFeatures(spec, annotation);
         includeFeaturesBeforeLastIncludedFeature(spec);
