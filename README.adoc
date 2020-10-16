@@ -88,4 +88,4 @@ This gives the following execution order:
 - base 3 _after base2 due to declaration order_
 - step 4 `@Between(["base 3", "base 4"])`
 - base 4
-- [.line-through]#base 5# `@Order(skip = 'base 5')`
+- _base 5 (skipped)_ `@Order(skip = 'base 5')`
