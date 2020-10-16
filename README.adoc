@@ -1,0 +1,73 @@
+= Spock Order Extension
+
+== Usage
+
+Add dependency
+
+[source,xml]
+.pom.xml
+----
+<dependencies>
+    <dependency>
+        <groupId>net.oneandone.spock</groupId>
+        <artifactId>order-extension</artifactId>
+        <version>0.1</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+----
+
+Annotate your spec with `@Order` and define order with annoations:
+`@After, @Before, @Between`.
+
+[source,groovy]
+.OrderExtensionFullExampleTest
+----
+@Order(skip = 'base 5')
+class OrderExtensionFullExampleTest extends Base {
+    @After("base 1")
+    def "step 1"() {
+        expect: true
+    }
+
+    def "step 2"() {
+        expect: true
+    }
+
+    @Before("base 2")
+    def "step 3"() {
+        expect: true
+    }
+
+    @Between(["base 3", "base 4"])
+    def "step 4"() {
+        expect: true
+    }
+}
+
+class Base extends Specification {
+    def "base 1"() {
+        expect: true
+    }
+
+    def "base 2"() {
+        expect: true
+    }
+
+    def "base 3"() {
+        expect: true
+    }
+
+    def "base 4"() {
+        expect: true
+    }
+
+    def "base 5"() {
+        expect: true
+    }
+}
+----
+
+Execution order is:
+
+
