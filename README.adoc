@@ -1,5 +1,15 @@
 = Spock Order Extension
 
+This extension gives the opportunity to define the order between specs and its parent.
+
+Like `@Stepwise` it ensures a defined execution order and skipps all the following features if a feature fails.
+
+Unlike `@Stepwise` it effects the complete hierarchy and lets you modify the execution order.
+
+.Reasons to use this extension
+- you want to start your test with a feature of the child spec
+- you want to skip features of your base spec
+
 == Usage
 
 Add dependency
@@ -17,7 +27,7 @@ Add dependency
 </dependencies>
 ----
 
-Annotate your spec with `@Order` and define order with annoations:
+Annotate your spec with `@Order` and define order with annotations:
 `@After, @Before, @Between`.
 
 [source,groovy]
@@ -68,6 +78,14 @@ class Base extends Specification {
 }
 ----
 
-Execution order is:
+This gives the following execution order:
 
-
+- base 1
+- step 1 `@After("base 1")`
+- step 2 _after step1 due to declaration order_
+- step 3 `@Before("base 2")`
+- base 2
+- base 3 _after base2 due to declaration order_
+- step 4 `@Between(["base 3", "base 4"])`
+- base 4
+- [.line-through]#base 5# `@Order(skip = 'base 5')`

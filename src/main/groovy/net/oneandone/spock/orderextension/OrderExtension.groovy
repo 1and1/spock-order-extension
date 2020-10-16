@@ -29,19 +29,26 @@ class OrderExtension extends AbstractAnnotationDrivenExtension<Order> {
 
         List<String> sorted = graph.topologicalSort()
 
+        int lastExecutionOrder = 0
         spec.allFeatures.forEach {
-            it.setExecutionOrder(sorted.indexOf(it.name))
+            if (order.skip().contains(it.name)) {
+                it.skipped = true
+                it.executionOrder = lastExecutionOrder
+            } else {
+                it.executionOrder = sorted.indexOf(it.name)
+                lastExecutionOrder = it.executionOrder
+            }
         }
     }
 
-    private List<FeatureInfo> filterSkippedFeatures(List<FeatureInfo> activeSuperFeatures, Order order) {
+    private static List<FeatureInfo> filterSkippedFeatures(List<FeatureInfo> activeSuperFeatures, Order order) {
         if (order.skip()) {
             return activeSuperFeatures.findAll { !order.skip().contains(it.name) }
         }
         return activeSuperFeatures
     }
 
-    private static String addLastFeatureAsPredecessorIfNothingDefined(graph, List<FeatureInfo> features) {
+    private static void addLastFeatureAsPredecessorIfNothingDefined(graph, List<FeatureInfo> features) {
         String lastFeature = null
         features.forEach {
             if (lastFeature && !graph.containsTo(it.name)) {
@@ -94,7 +101,7 @@ class OrderExtension extends AbstractAnnotationDrivenExtension<Order> {
                 List<FeatureInfo> features = spec.allFeatures.sort { it.executionOrder }
                 int indexOfFailedFeature = features.indexOf(error.getMethod().getFeature())
                 for (int i = indexOfFailedFeature + 1; i < features.size(); i++) {
-                    features.get(i).skip("Skipped due to previous Error (by @Order)")
+                    features[i].skipped = true
                 }
             }
         })
