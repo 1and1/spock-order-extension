@@ -89,3 +89,8 @@ This gives the following execution order:
 - step 4 `@Between(["base 3", "base 4"])`
 - base 4
 - _base 5 (skipped)_ `@Order(skip = 'base 5')`
+
+== Hints
+
+- Features which  are not annotated are executed in declaration order
+- If `@After` does not point to the last base feature it must be followed by `@Before`, so that it's clear when to continue the execution with the base features.
