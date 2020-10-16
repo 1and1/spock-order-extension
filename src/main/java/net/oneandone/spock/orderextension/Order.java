@@ -1,11 +1,11 @@
-package net.oneandone.spock.orderextension
+package net.oneandone.spock.orderextension;
 
-import java.lang.annotation.ElementType
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-import java.lang.annotation.Target
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.spockframework.runtime.extension.ExtensionAnnotation
+import org.spockframework.runtime.extension.ExtensionAnnotation;
 
 /**
  * Indicates that a spec's feature methods should be run sequentially
@@ -26,15 +26,14 @@ import org.spockframework.runtime.extension.ExtensionAnnotation
  *
  * @see After
  * @see Before
- * @see Between
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtensionAnnotation(OrderExtension)
+@ExtensionAnnotation(OrderExtension.class)
 @interface Order {
     /**
      * The listed features of the base specs will be skipped.
      */
-    String[] skip() default []
+    String[] skip() default {};
 }
 

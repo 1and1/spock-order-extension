@@ -28,7 +28,7 @@ Add dependency
 ----
 
 Annotate your spec with `@Order` and define order with annotations:
-`@After, @Before, @Between`.
+`@After` and `@Before`.
 
 [source,groovy]
 .OrderExtensionFullExampleTest
@@ -36,21 +36,21 @@ Annotate your spec with `@Order` and define order with annotations:
 @Order(skip = 'base 5')
 class OrderExtensionFullExampleTest extends Base {
     @After("base 1")
-    def "step 1"() {
+    def "child 1"() {
         expect: true
     }
 
-    def "step 2"() {
+    def "child 2"() {
         expect: true
     }
 
     @Before("base 2")
-    def "step 3"() {
+    def "child 3"() {
         expect: true
     }
 
-    @Between(["base 3", "base 4"])
-    def "step 4"() {
+    @After("base 3") @Before("base 4")
+    def "child 4"() {
         expect: true
     }
 }
@@ -81,12 +81,12 @@ class Base extends Specification {
 This gives the following execution order:
 
 - base 1
-- step 1 `@After("base 1")`
-- step 2 _after step1 due to declaration order_
-- step 3 `@Before("base 2")`
+- child 1 `@After("base 1")`
+- child 2 _after step1 due to declaration order_
+- child 3 `@Before("base 2")`
 - base 2
 - base 3 _after base2 due to declaration order_
-- step 4 `@Between(["base 3", "base 4"])`
+- child 4 `@After("base 3") @Before("base 4")`
 - base 4
 - _base 5 (skipped)_ `@Order(skip = 'base 5')`
 

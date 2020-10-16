@@ -1,25 +1,26 @@
 package net.oneandone.spock.orderextension
 
+
 import spock.lang.Specification
 
 @Order(skip = 'base 5')
 class OrderExtensionFullExampleTest extends Base {
     @After("base 1")
-    def "step 1"() {
+    def "child 1"() {
         expect: true
     }
 
-    def "step 2"() {
+    def "child 2"() {
         expect: true
     }
 
     @Before("base 2")
-    def "step 3"() {
+    def "child 3"() {
         expect: true
     }
 
-    @Between(["base 3", "base 4"])
-    def "step 4"() {
+    @After("base 3") @Before("base 4")
+    def "child 4"() {
         expect: true
     }
 }
