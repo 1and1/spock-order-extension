@@ -9,6 +9,7 @@ import org.spockframework.runtime.model.SpecInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,7 +86,8 @@ public class OrderExtension extends AbstractAnnotationDrivenExtension<Order> {
                 orderAnnotationFound = true;
             }
             if (!orderAnnotationFound && !waitingForBefore) {
-                throw new IllegalArgumentException("Found not annotated feature '$featureInfo.name' in @Order spec. This is only between @After and @Before features.");
+                throw new IllegalArgumentException("Found not annotated feature '" + feature.getName() + "' in @Order spec."
+                        + " This is only between @After and @Before features allowed.");
             }
         }
     }
@@ -107,7 +109,7 @@ public class OrderExtension extends AbstractAnnotationDrivenExtension<Order> {
             public void error(ErrorInfo error) {
                 // mark all subsequent features as skipped
                 List<FeatureInfo> features = new ArrayList<>(spec.getAllFeatures());
-                features.sort( (a,b) -> b.getExecutionOrder() - a.getExecutionOrder());
+                features.sort(Comparator.comparingInt(FeatureInfo::getExecutionOrder));
 
                 int indexOfFailedFeature = features.indexOf(error.getMethod().getFeature());
                 for (int i = indexOfFailedFeature + 1; i < features.size(); i++) {

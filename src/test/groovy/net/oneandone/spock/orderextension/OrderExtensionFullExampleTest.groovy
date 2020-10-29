@@ -25,7 +25,7 @@ class OrderExtensionFullExampleTest extends Base {
     }
 }
 
-class Base extends Specification {
+abstract class Base extends Specification {
     def "base 1"() {
         expect: true
     }

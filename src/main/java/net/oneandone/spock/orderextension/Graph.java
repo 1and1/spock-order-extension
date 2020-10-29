@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 class Graph {
     private final Map<String, String> adj = new HashMap<>();
@@ -24,19 +25,15 @@ class Graph {
 
     void addEdge(String from, String to) {
         if (!allowedVertices.contains(from)) {
-            throw new IllegalArgumentException("'$from' is not a valid feature name or skipped");
+            throw new IllegalArgumentException(from + " is not a valid feature name or skipped");
         }
         if (!allowedVertices.contains(to)) {
-            throw new IllegalArgumentException("'$to' is not a valid feature name or skipped");
+            throw new IllegalArgumentException(to + " is not a valid feature name or skipped");
         }
-        if (adj.containsValue(to)) {
-            String key = adj.entrySet().stream().filter(e -> e.getValue().equals(to)).findAny().get().getKey();
-            throw new IllegalArgumentException("Unclear execution order. Failing to add '" + to
-                    + "' to '" + from + "'. '" + to + "' is already after " + key);
-        }
-        if (adj.containsKey(from)) {
-            throw new IllegalArgumentException("Unclear execution order. Failing to add '" + to
-                    + "' to '" + from + "'. '" + from + "' is already followed by " + adj.get(from));
+        if (adj.containsKey(from) || adj.containsValue(to)) {
+            String graphRep = adj.entrySet().stream().map(e -> "'" + e.getKey() + "' -> '" + e.getValue() + "'").collect(Collectors.joining(", "));
+            throw new IllegalArgumentException("Unclear execution order. Failing to add order dependency '" + from
+                    + "' -> '" + to + "'. Graph already contains: " + graphRep + "");
 
         }
         adj.put(from, to);
